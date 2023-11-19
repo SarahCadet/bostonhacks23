@@ -26,8 +26,9 @@ col2.markdown('Enter your location for a 15 day solar panel production forecast'
 forecast = []
 
 def gen_link(loc):
-    with open('apikey.txt', 'r') as file:   # get api key
-        apikey = file.read().rstrip()
+    #with open('apikey.txt', 'r') as file:   # get api key
+    #    apikey = file.read().rstrip()
+    apikey = st.secrets["apikey"]
 
     apilink1 = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/'
     apilink2 = '?unitGroup=metric&elements=name%2Cdatetime%2Ctemp%2Cdew%2Chumidity%2Cwindspeed%2Ccloudcover%2Cvisibility%2Csolarenergy&include=days%2Cstats%2Cstatsfcst%2Cremote%2Cobs%2Cfcst&key=' + apikey + '&contentType=csv'
@@ -53,7 +54,8 @@ def gen_data(link):
     return forecast
 
 def graph():
-    col2.area_chart(forecast, x='Date', y='Predicted Solar Output (kW/hr)', color=(66, 127, 19, 150))
+    col2.area_chart(forecast, x='Date', y='Predicted Solar Output (kW/hr)', color=(66, 127, 19, 150), height=562)
+
 
 def predict(vs_test):
     df = pd.read_csv("joined-weather-solar.csv")
@@ -108,7 +110,7 @@ def predict(vs_test):
     vs_pred = result.predict(vs_test)
 
     vs_test_df = vs_test_df.join(pd.DataFrame(data=vs_pred, columns=['Predicted Solar Output (kW/hr)']))
-    col1.dataframe(vs_test_df.loc[:, ['Date', 'Predicted Solar Output (kW/hr)']], use_container_width=True, hide_index=True)
+    col1.dataframe(vs_test_df.loc[:, ['Date', 'Predicted Solar Output (kW/hr)']], use_container_width=True, hide_index=True, height=562)
 
     return vs_test_df
   
